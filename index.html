@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CMS Vistorias</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{--o:#ef4b23;--ink:#25282c;--muted:#6d6e71;--line:#d9dbde;--bg:#f4f5f7}
+*{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:245px 1fr 350px;min-height:100vh}
+aside{background:#fff;padding:17px;height:100vh;position:sticky;top:0;overflow:auto}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}
+.logo{font-size:24px;font-weight:800}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
+.btn{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer}.primary{background:var(--o);color:#fff}.dark{background:#30343a;color:#fff}.ghost{background:#f7f8f9;border:1px solid var(--line)}.full{width:100%}
+.field{width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#fff}label{display:block;margin:12px 0 5px;font-size:12px;color:#666;font-weight:bold}textarea.field{min-height:85px;resize:vertical}
+.nav{display:block;width:100%;border:0;background:transparent;text-align:left;padding:8px;border-radius:7px;cursor:pointer}.nav.active{background:#fff0ec;color:#ad381f;font-weight:bold}.sect{margin:16px 0 6px;font-size:11px;text-transform:uppercase;font-weight:bold;color:#777}
+main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--line);padding:0 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:4}.grow{flex:1}.search{max-width:260px}
+.notice{margin:16px 18px 12px;background:#fff7df;border:1px solid #ecd17a;padding:10px;border-radius:8px;color:#6c5813;font-size:12px;line-height:1.45}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:0 18px 12px}.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;cursor:pointer}.pill.active{background:#333;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:13px;padding:0 18px 24px}.card{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}.card.selected{outline:3px solid #ef4b2340;border-color:var(--o)}.photo{height:160px;background:#eceeef;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}.meta{padding:10px}.title{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.small{font-size:12px;color:#777;margin-top:4px;line-height:1.35}.tags{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}.tag{font-size:11px;font-weight:bold;border-radius:999px;padding:4px 7px}.good{background:#e6f3df;color:#456f2f}.regular{background:#fff2c3;color:#806300}.bad{background:#f6dddd;color:#8b1919}.nv{background:#ececec;color:#666}.cls{background:#e8eef8;color:#355579}.review{background:#ffe4d9;color:#963d20}.thumb{width:100%;height:190px;object-fit:cover;border-radius:8px}.empty{text-align:center;color:#888;padding:38px 8px}.progress{height:8px;background:#eee;border-radius:99px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;width:0;background:var(--o)}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:20}.modal.open{display:flex}.modalbox{background:#fff;width:min(950px,95vw);max-height:92vh;overflow:auto;border-radius:12px;padding:18px}.report{display:none}.a4{width:210mm;min-height:297mm;background:#fff;margin:0 auto 12px;padding:13mm 14mm;page-break-after:always}.a4 h1{font-size:18px;border-bottom:2px solid var(--o);padding-bottom:5px}.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:4mm 5mm}.rphoto .pic{height:68mm;border:1px solid #ccc;overflow:hidden;background:#eee}.rphoto img{width:100%;height:100%;object-fit:cover}.cap{border:1px solid #ddd;border-top:0;padding:4px;font-size:8.3px;min-height:15mm;line-height:1.25}
+@media(max-width:1050px){.app{grid-template-columns:220px 1fr}.right{position:fixed;right:0;width:350px;z-index:10;box-shadow:-5px 0 20px #0002}}
+@media print{body{background:#fff}.app,.modal{display:none!important}.report{display:block!important}.a4{width:210mm;height:297mm;min-height:297mm;margin:0}@page{size:A4 portrait;margin:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="left">
+<div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div>
+<div class="actions">
+<button class="btn primary full" onclick="zipInput.click()">Importar ZIP</button><input id="zipInput" type="file" accept=".zip" hidden>
+<button id="analyzeBtn" class="btn dark full" onclick="analyzeAll()">Analisar todas com IA</button>
+<button class="btn ghost full" onclick="generateReport()">Gerar relatório</button>
+<button class="btn ghost full" onclick="exportPdf()">Exportar PDF A4</button>
+</div>
+<label>Chave OpenAI</label><input id="apiKey" class="field" type="password" placeholder="Opcional se configurada no Vercel">
+<div class="sect">Projeto</div>
+<button class="nav active" onclick="setSector('all',this)">Todas</button><button class="nav" onclick="setSector('G1',this)">Galpão 01</button><button class="nav" onclick="setSector('G2',this)">Galpão 02</button><button class="nav" onclick="setSector('ADM',this)">Administrativo</button><button class="nav" onclick="setSector('EXT',this)">Áreas externas</button>
+<div class="sect">Processamento</div><div id="stats" class="muted">0 fotos</div><div class="progress"><span id="bar"></span></div>
+</aside>
+<main>
+<div class="top"><b>PrimeInvest / Multilog — Santos/SP</b><span class="grow"></span><input id="search" class="field search" placeholder="Buscar..." oninput="render()"></div>
+<div class="notice"><b>Análise em grupos:</b> fotos da mesma pasta são ordenadas e analisadas em blocos de até 4 imagens. Arquivos <code>._IMG...</code>, <code>__MACOSX</code> e <code>.DS_Store</code> são descartados.</div>
+<div class="filters"><button class="pill active" onclick="setCondition('all',this)">Todas</button><button class="pill" onclick="setCondition('Bom',this)">Bom</button><button class="pill" onclick="setCondition('Regular',this)">Regular</button><button class="pill" onclick="setCondition('Ruim',this)">Ruim</button><button class="pill" onclick="setCondition('Não verificado',this)">Não verificado</button><button class="pill" onclick="setCondition('Revisar',this)">Revisar IA</button></div>
+<div id="grid" class="grid"></div>
+</main>
+<aside class="right">
+<div id="empty" class="empty">Selecione uma foto.</div>
+<div id="form" style="display:none">
+<img id="edImg" class="thumb"><h3 id="edName"></h3><button class="btn dark full" onclick="analyzeSelected()">Reanalisar grupo desta foto</button>
+<label>Contexto do grupo</label><textarea id="edGroup" class="field" readonly></textarea>
+<label>Setor</label><select id="edSector" class="field"><option value="G1">Galpão 01</option><option value="G2">Galpão 02</option><option value="ADM">Administrativo</option><option value="EXT">Áreas externas</option></select>
+<label>Elemento</label><input id="edElement" class="field"><label>Patologia / condição</label><input id="edFinding" class="field">
+<label>Condição aparente</label><select id="edCondition" class="field"><option>Bom</option><option>Regular</option><option>Ruim</option><option>Não verificado</option></select>
+<label>Classe</label><select id="edClass" class="field"><option>I</option><option>M</option><option>C</option><option>E</option></select>
+<label>Legenda técnica</label><textarea id="edCaption" class="field"></textarea><label>Recomendação</label><textarea id="edRec" class="field"></textarea>
+<label><input id="edReview" type="checkbox"> Manter para revisão técnica</label><button class="btn primary full" style="margin-top:12px" onclick="saveEdit()">Salvar alteração</button>
+</div>
+</aside>
+</div>
+<div id="modal" class="modal"><div class="modalbox"><div style="display:flex;align-items:center;gap:8px"><b style="font-size:18px">Prévia A4</b><span class="grow"></span><button class="btn ghost" onclick="modal.classList.remove('open')">Fechar</button><button class="btn primary" onclick="exportPdf()">Exportar PDF</button></div><div id="preview"></div></div></div>
+<div id="report" class="report"></div>
+<script>
+const $=id=>document.getElementById(id),state={items:[],selected:null,sector:'all',condition:'all'};
+function sname(s){return({G1:'Galpão 01',G2:'Galpão 02',ADM:'Administrativo',EXT:'Áreas externas'})[s]||s}
+function hidden(n){const p=n.split('/'),b=p[p.length-1];return n.startsWith('__MACOSX/')||b.startsWith('._')||b==='.DS_Store'}
+function sector(p){p=p.toUpperCase();if(p.includes('GALPAO_02')||p.includes('G2'))return'G2';if(p.includes('ADMIN'))return'ADM';if(p.includes('EXTERN')||p.includes('PATIO')||p.includes('DREN')||p.includes('PERIM'))return'EXT';return'G1'}
+function elem(p){p=p.toUpperCase();for(const [k,v] of [['PISO','Piso industrial'],['ESTRUT','Estrutura aparente'],['COBERT','Cobertura observável'],['DOCA','Docas / portas / portões'],['ELETR','Instalações elétricas aparentes'],['HIDR','Instalações hidráulicas aparentes'],['INCEND','Sistema de incêndio'],['DREN','Drenagem superficial'],['PAV','Pavimentação externa'],['PERIM','Fechamento / perímetro'],['FACH','Fachadas']])if(p.includes(k))return v;return'Condição geral'}
+function folder(p){const a=p.split('/');a.pop();return a.join('/')}function esc(s){return(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function valid(blob){return new Promise(r=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);r(i.naturalWidth>20&&i.naturalHeight>20)};i.onerror=()=>{URL.revokeObjectURL(u);r(false)};i.src=u})}
+function resize(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>{let w=i.naturalWidth,h=i.naturalHeight,s=Math.min(1,1400/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.8))};i.onerror=rej;i.src=u})}
+$('zipInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;const z=await JSZip.loadAsync(f);state.items=[];let ignored=0;for(const [name,en] of Object.entries(z.files)){if(en.dir||hidden(name)||!/.(jpe?g|png|webp)$/i.test(name)){ignored++;continue}const b=await en.async('blob');if(!(await valid(b))){ignored++;continue}state.items.push({id:crypto.randomUUID(),name:name.split('/').pop(),path:name,folder:folder(name),blob:b,url:URL.createObjectURL(b),sector:sector(name),element:elem(name),finding:'Aguardando análise IA',condition:'Não verificado',cls:'I',caption:'Aguardando análise visual.',recommendation:'Aguardando análise visual.',review:true,groupSummary:''})}state.items.sort((a,b)=>a.path.localeCompare(b.path,undefined,{numeric:true}));state.selected=state.items[0]?.id||null;$('stats').textContent=`${state.items.length} fotos válidas · ${ignored} ignorados`;render();updateEditor()};
+function groups(){const b={};for(const x of state.items)(b[x.folder+'|'+x.sector]??=[]).push(x);const out=[];for(const a of Object.values(b)){a.sort((x,y)=>x.name.localeCompare(y.name,undefined,{numeric:true}));for(let i=0;i<a.length;i+=4)out.push(a.slice(i,i+4))}return out}
+function groupOf(x){return groups().find(g=>g.some(y=>y.id===x.id))||[x]}
+async function analyzeGroup(g){const images=[],metadata=[];for(let i=0;i<g.length;i++){images.push(await resize(g[i].blob));metadata.push({index:i,filename:g[i].name,folder:g[i].folder,sector:sname(g[i].sector),element_hint:g[i].element})}const headers={'Content-Type':'application/json'};if($('apiKey').value.trim())headers['x-openai-key']=$('apiKey').value.trim();const r=await fetch('/api/analyze-group',{method:'POST',headers,body:JSON.stringify({images,metadata})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Erro');for(const rr of j.results){const x=g[rr.index];x.element=rr.element;x.finding=rr.finding;x.condition=rr.condition;x.cls=rr.action_class;x.caption=rr.caption;x.recommendation=rr.recommendation;x.review=rr.review_required||Number(rr.confidence||0)<.7;x.groupSummary=j.group_summary||''}}
+async function analyzeAll(){if(!state.items.length)return alert('Importe o ZIP primeiro.');$('analyzeBtn').disabled=true;const gs=groups();let n=0;try{for(let i=0;i<gs.length;i++){try{await analyzeGroup(gs[i])}catch(e){for(const x of gs[i]){x.finding='Falha na análise';x.review=true;x.groupSummary=e.message}}n+=gs[i].length;$('bar').style.width=(100*n/state.items.length)+'%';$('stats').textContent=`${n}/${state.items.length} analisadas · grupo ${i+1}/${gs.length}`;render()}}finally{$('analyzeBtn').disabled=false;updateEditor()}}
+async function analyzeSelected(){const x=state.items.find(i=>i.id===state.selected);if(!x)return;try{await analyzeGroup(groupOf(x));render();updateEditor()}catch(e){alert(e.message)}}
+function list(){let a=state.items;if(state.sector!=='all')a=a.filter(x=>x.sector===state.sector);if(state.condition==='Revisar')a=a.filter(x=>x.review);else if(state.condition!=='all')a=a.filter(x=>x.condition===state.condition);const q=$('search').value.toLowerCase();if(q)a=a.filter(x=>(x.name+' '+x.finding+' '+x.caption+' '+x.element).toLowerCase().includes(q));return a}
+function render(){const g=$('grid');g.innerHTML='';for(const x of list()){const cc=x.condition==='Bom'?'good':x.condition==='Regular'?'regular':x.condition==='Ruim'?'bad':'nv',d=document.createElement('div');d.className='card'+(x.id===state.selected?' selected':'');d.onclick=()=>{state.selected=x.id;render();updateEditor()};d.innerHTML=`<div class="photo"><img src="${x.url}"></div><div class="meta"><div class="title">${esc(x.name)}</div><div class="small">${sname(x.sector)} · ${esc(x.element)}</div><div class="small"><b>${esc(x.finding)}</b></div><div class="tags"><span class="tag ${cc}">${x.condition}</span><span class="tag cls">${x.cls}</span>${x.review?'<span class="tag review">Revisar</span>':''}</div></div>`;g.appendChild(d)}if(!list().length)g.innerHTML='<div class="empty" style="grid-column:1/-1">Importe um ZIP para iniciar.</div>'}
+function updateEditor(){const x=state.items.find(i=>i.id===state.selected);$('empty').style.display=x?'none':'block';$('form').style.display=x?'block':'none';if(!x)return;$('edImg').src=x.url;$('edName').textContent=x.name;$('edGroup').value=x.groupSummary;$('edSector').value=x.sector;$('edElement').value=x.element;$('edFinding').value=x.finding;$('edCondition').value=x.condition;$('edClass').value=x.cls;$('edCaption').value=x.caption;$('edRec').value=x.recommendation;$('edReview').checked=x.review}
+function saveEdit(){const x=state.items.find(i=>i.id===state.selected);x.sector=$('edSector').value;x.element=$('edElement').value;x.finding=$('edFinding').value;x.condition=$('edCondition').value;x.cls=$('edClass').value;x.caption=$('edCaption').value;x.recommendation=$('edRec').value;x.review=$('edReview').checked;render()}
+function setSector(v,b){state.sector=v;document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()}function setCondition(v,b){state.condition=v;document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()}
+function reportHtml(){let h='';for(const s of ['G1','G2','ADM','EXT']){const a=state.items.filter(x=>x.sector===s);for(let i=0;i<a.length;i+=6){h+=`<section class="a4"><h1>${sname(s)} — Registro fotográfico</h1><div class="rgrid">`;for(const x of a.slice(i,i+6))h+=`<div class="rphoto"><div class="pic"><img src="${x.url}"></div><div class="cap"><b>${esc(x.finding)}</b><br>${esc(x.caption)}<br><b>Condição: ${x.condition} · Classe ${x.cls}</b><br>${esc(x.recommendation)}</div></div>`;h+='</div></section>'}}return h||'<section class="a4"><h1>Sem fotos</h1></section>'}
+function generateReport(){const h=reportHtml();$('preview').innerHTML=h;$('report').innerHTML=h;$('modal').classList.add('open')}function exportPdf(){if(!$('report').innerHTML)$('report').innerHTML=reportHtml();window.print()}render();
+</script>
+</body></html>
