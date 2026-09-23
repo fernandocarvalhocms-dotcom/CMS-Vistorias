@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CMS Vistorias</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{--o:#ef4b23;--ink:#25282c;--muted:#6d6e71;--line:#d9dbde;--bg:#f4f5f7}
 *{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -151,7 +151,30 @@ async function generateReport(){
  const h=reportHtml();$('preview').innerHTML=h;$('report').innerHTML=h;await waitForReportImages($('preview'));$('modal').classList.add('open')
 }
 async function exportPdf(){
- const h=reportHtml();$('report').innerHTML=h;await waitForReportImages($('report'));setDone('Relatório pronto','Abrindo a janela de impressão para salvar em PDF A4');setTimeout(()=>window.print(),250)
+ const h=reportHtml();const root=$('report');root.innerHTML=h;root.style.display='block';await waitForReportImages(root);
+ setBusy('Gerando PDF A4','Montando páginas e incorporando fotografias');
+ try{
+   if(window.html2pdf){
+     const opt={
+       margin:0,
+       filename:'CMS_Relatorio_Inspecao_Visual_Santos.pdf',
+       image:{type:'jpeg',quality:0.92},
+       html2canvas:{scale:1.45,useCORS:true,backgroundColor:'#ffffff',logging:false},
+       jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+       pagebreak:{mode:['css','legacy']}
+     };
+     await html2pdf().set(opt).from(root).save();
+     setDone('PDF gerado','Arquivo CMS_Relatorio_Inspecao_Visual_Santos.pdf baixado');
+   }else{
+     setDone('Relatório pronto','Abrindo impressão para salvar como PDF');
+     setTimeout(()=>window.print(),200);
+   }
+ }catch(e){
+   setError('Falha ao gerar PDF',e.message);
+   setTimeout(()=>window.print(),200);
+ }finally{
+   root.style.display='';
+ }
 }
 render();
 </script>
