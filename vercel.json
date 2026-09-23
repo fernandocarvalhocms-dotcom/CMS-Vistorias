@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/analyze-group.js": {
+      "maxDuration": 60
+    }
+  }
+}
