@@ -9,7 +9,7 @@
 *{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:245px 1fr 350px;min-height:100vh}
 aside{background:#fff;padding:17px;height:100vh;position:sticky;top:0;overflow:auto}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}
-.logo{font-size:24px;font-weight:800}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
+.appBrand{display:flex;align-items:center;gap:10px}.appBrand img{width:30px;height:78px;object-fit:contain;flex:0 0 30px}.logo{font-size:24px;font-weight:800}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
 .btn{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer}.primary{background:var(--o);color:#fff}.dark{background:#30343a;color:#fff}.ghost{background:#f7f8f9;border:1px solid var(--line)}.full{width:100%}
 .field{width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#fff}label{display:block;margin:12px 0 5px;font-size:12px;color:#666;font-weight:bold}textarea.field{min-height:85px;resize:vertical}
 .nav{display:block;width:100%;border:0;background:transparent;text-align:left;padding:8px;border-radius:7px;cursor:pointer}.nav.active{background:#fff0ec;color:#ad381f;font-weight:bold}.sect{margin:16px 0 6px;font-size:11px;text-transform:uppercase;font-weight:bold;color:#777}
@@ -21,15 +21,33 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 .spinner{width:14px;height:14px;border:2px solid #ddd;border-top-color:var(--o);border-radius:50%;animation:spin .8s linear infinite;flex:0 0 14px;margin-top:1px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .card.processing{outline:3px solid #f6b39f;border-color:var(--o)}.processingTag{background:#fff0e9;color:#a63f20}
-.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:20}.modal.open{display:flex}.modalbox{background:#fff;width:min(950px,95vw);max-height:92vh;overflow:auto;border-radius:12px;padding:18px}.report{display:none}.a4{width:210mm;min-height:297mm;background:#fff;margin:0 auto 12px;padding:13mm 14mm;page-break-after:always}.a4 h1{font-size:18px;border-bottom:2px solid var(--o);padding-bottom:5px}.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:4mm 5mm}.rphoto .pic{height:68mm;border:1px solid #ccc;overflow:hidden;background:#eee}.rphoto img{width:100%;height:100%;object-fit:cover}.cap{border:1px solid #ddd;border-top:0;padding:4px;font-size:8.3px;min-height:15mm;line-height:1.25}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:20}.modal.open{display:flex}.modalbox{background:#fff;width:min(980px,95vw);max-height:92vh;overflow:auto;border-radius:12px;padding:18px}
+.report{display:none}
+.a4{width:210mm;height:297mm;background:#fff;margin:0 auto 12px;padding:11mm 13mm 13mm 13mm;page-break-after:always;position:relative;overflow:hidden;font-family:Arial,sans-serif}
+.reportHeader{height:24mm;position:relative;padding-right:15mm;border-bottom:1px solid #ddd;margin-bottom:4mm}
+.reportTitle{font-size:16px;font-weight:800;line-height:1.15;text-align:center;margin-top:2mm}
+.reportSub{font-size:10px;text-align:center;color:#555;margin-top:1.5mm}
+.reportLogo{position:absolute;right:0;top:-3mm;width:10mm;height:27mm;object-fit:contain}
+.reportOrangeLine{position:absolute;right:12mm;top:-1mm;width:.8mm;height:26mm;background:var(--o)}
+.reportFooter{position:absolute;left:13mm;right:13mm;bottom:5mm;height:8mm;border-top:1px solid #ddd;padding-top:2mm;font-size:7px;color:#777;display:flex;justify-content:space-between;align-items:flex-start}
+.reportFooter .company{text-align:left;line-height:1.2}.reportFooter .pageNo{font-weight:700;color:#555}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,82mm);gap:4mm 5mm}
+.rphoto{height:82mm;display:grid;grid-template-rows:52mm 30mm;break-inside:avoid;overflow:hidden}
+.rphoto .pic{height:52mm;border:1px solid #cfcfcf;overflow:hidden;background:#f1f1f1;position:relative}
+.rphoto .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.itemBadge{position:absolute;left:2mm;top:2mm;background:rgba(0,0,0,.72);color:#fff;font-size:7px;font-weight:700;padding:1.2mm 2mm;border-radius:3px}
+.cap{height:30mm;border:1px solid #cfcfcf;border-top:0;padding:2mm 2.2mm;font-size:7.25px;line-height:1.2;overflow:hidden;background:#fff}
+.cap.compact{font-size:6.7px}.cap.tight{font-size:6.15px;line-height:1.13}
+.cap .itemTitle{font-size:7.7px;font-weight:800;margin-bottom:1mm}.cap b{font-weight:700}
+.coverBlock{padding-top:28mm;text-align:center}.coverBlock h1{font-size:22px;line-height:1.2;margin:0 0 5mm}.coverBlock h2{font-size:14px;color:var(--o);margin:0 0 6mm}.coverMeta{font-size:11px;font-weight:700;margin-bottom:10mm}.coverNote{font-size:9px;color:#666;margin:8mm auto 0;max-width:150mm}
 @media(max-width:1050px){.app{grid-template-columns:220px 1fr}.right{position:fixed;right:0;width:350px;z-index:10;box-shadow:-5px 0 20px #0002}}
-@media print{body{background:#fff}.app,.modal{display:none!important}.report{display:block!important}.a4{width:210mm;height:297mm;min-height:297mm;margin:0}@page{size:A4 portrait;margin:0}}
+@media print{html,body{margin:0!important;padding:0!important;background:#fff!important}.app,.modal{display:none!important}.report{display:block!important}.a4{width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;box-shadow:none!important;page-break-after:always!important;break-after:page!important}@page{size:A4 portrait;margin:0}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="left">
-<div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div>
+<div class="appBrand"><img src="/assets/cms-logo.svg" alt="CMS"><div><div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div></div></div>
 <div class="actions">
 <button class="btn primary full" onclick="zipInput.click()">Importar ZIP</button><input id="zipInput" type="file" accept=".zip" hidden>
 <button id="analyzeBtn" class="btn dark full" onclick="analyzeAll()">Analisar todas com IA</button>
@@ -91,7 +109,50 @@ function render(){const g=$('grid');g.innerHTML='';for(const x of list()){const 
 function updateEditor(){const x=state.items.find(i=>i.id===state.selected);$('empty').style.display=x?'none':'block';$('form').style.display=x?'block':'none';if(!x)return;$('edImg').src=x.url;$('edName').textContent=x.name;$('edGroup').value=x.groupSummary;$('edSector').value=x.sector;$('edElement').value=x.element;$('edFinding').value=x.finding;$('edCondition').value=x.condition;$('edClass').value=x.cls;$('edCaption').value=x.caption;$('edRec').value=x.recommendation;$('edReview').checked=x.review}
 function saveEdit(){const x=state.items.find(i=>i.id===state.selected);x.sector=$('edSector').value;x.element=$('edElement').value;x.finding=$('edFinding').value;x.condition=$('edCondition').value;x.cls=$('edClass').value;x.caption=$('edCaption').value;x.recommendation=$('edRec').value;x.review=$('edReview').checked;render()}
 function setSector(v,b){state.sector=v;document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()}function setCondition(v,b){state.condition=v;document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()}
-function reportHtml(){let h='';for(const s of ['G1','G2','ADM','EXT']){const a=state.items.filter(x=>x.sector===s);for(let i=0;i<a.length;i+=6){h+=`<section class="a4"><h1>${sname(s)} — Registro fotográfico</h1><div class="rgrid">`;for(const x of a.slice(i,i+6))h+=`<div class="rphoto"><div class="pic"><img src="${x.url}"></div><div class="cap"><b>${esc(x.finding)}</b><br>${esc(x.caption)}<br><b>Condição: ${x.condition} · Classe ${x.cls}</b><br>${esc(x.recommendation)}</div></div>`;h+='</div></section>'}}return h||'<section class="a4"><h1>Sem fotos</h1></section>'}
-function generateReport(){const h=reportHtml();$('preview').innerHTML=h;$('report').innerHTML=h;$('modal').classList.add('open')}function exportPdf(){if(!$('report').innerHTML)$('report').innerHTML=reportHtml();window.print()}render();
+function reportFooter(page,total){
+ return `<div class="reportFooter"><div class="company">Ceemeesse Engenharia Ltda<br>Av. Ipanema, 165 cj.1707 – 18 do Forte – SP<br>www.cmseng.com.br</div><div class="pageNo">${page}/${total}</div></div>`
+}
+function reportHeader(title,subtitle=''){
+ return `<div class="reportHeader"><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}<div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.svg" alt="CMS"></div>`
+}
+function captionClass(x){
+ const n=(x.finding||'').length+(x.caption||'').length+(x.recommendation||'').length;
+ return n>520?'tight':n>360?'compact':'';
+}
+function reportHtml(){
+ const pages=[];
+ let itemNo=1;
+ const sectorPages=[];
+ for(const s of ['G1','G2','ADM','EXT']){
+   const a=state.items.filter(x=>x.sector===s);
+   for(let i=0;i<a.length;i+=6) sectorPages.push({sector:s,items:a.slice(i,i+6)});
+ }
+ const total=1+sectorPages.length;
+ pages.push(`<section class="a4">${reportHeader('RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL','Condições aparentes para locação')}<div class="coverBlock"><h1>RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL</h1><h2>Condições aparentes para locação</h2><div class="coverMeta">PRIMEINVEST / MULTILOG · SANTOS/SP<br>02 Galpões e Áreas Externas</div><img src="/assets/cms-logo.svg" alt="CMS" style="height:70mm;width:auto;object-fit:contain"><div class="coverNote">Relatório baseado em inspeção visual e registros fotográficos. As ocorrências permanecem sujeitas à validação do responsável técnico.</div></div>${reportFooter(1,total)}</section>`);
+ let page=2;
+ for(const p of sectorPages){
+   let cards='';
+   for(const x of p.items){
+     const n=String(itemNo).padStart(2,'0');
+     const cls=captionClass(x);
+     cards+=`<div class="rphoto"><div class="pic"><img src="${x.url}"><span class="itemBadge">Item ${n}</span></div><div class="cap ${cls}"><div class="itemTitle">Item ${n} — ${esc(x.finding||'Registro fotográfico')}</div>${esc(x.caption||'')}<br><b>Condição: ${esc(x.condition||'Não verificado')} · Classe ${esc(x.cls||'I')}</b><br><b>Recomendação:</b> ${esc(x.recommendation||'')}</div></div>`;
+     itemNo++;
+   }
+   pages.push(`<section class="a4">${reportHeader('REGISTRO FOTOGRÁFICO — '+sname(p.sector),'Inspeção visual do imóvel')}<div class="rgrid">${cards}</div>${reportFooter(page,total)}</section>`);
+   page++;
+ }
+ return pages.join('');
+}
+function waitForReportImages(root){
+ const imgs=[...root.querySelectorAll('img')];
+ return Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})))
+}
+async function generateReport(){
+ const h=reportHtml();$('preview').innerHTML=h;$('report').innerHTML=h;await waitForReportImages($('preview'));$('modal').classList.add('open')
+}
+async function exportPdf(){
+ const h=reportHtml();$('report').innerHTML=h;await waitForReportImages($('report'));setDone('Relatório pronto','Abrindo a janela de impressão para salvar em PDF A4');setTimeout(()=>window.print(),250)
+}
+render();
 </script>
 </body></html>
