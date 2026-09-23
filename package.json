@@ -2,8 +2,5 @@
   "name": "cms-vistorias",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
-  "dependencies": {
-    "openai": "^6.16.0"
-  }
+  "type": "module"
 }
