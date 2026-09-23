@@ -1,33 +1,23 @@
-import OpenAI from "openai";
+const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 
-const MODEL = process.env.OPENAI_VISION_MODEL || "gpt-5.6-luna";
-
-const schema = {
-  type: "object",
-  additionalProperties: false,
+const responseSchema = {
+  type: "OBJECT",
   properties: {
-    group_summary: { type: "string" },
+    group_summary: { type: "STRING" },
     results: {
-      type: "array",
+      type: "ARRAY",
       items: {
-        type: "object",
-        additionalProperties: false,
+        type: "OBJECT",
         properties: {
-          index: { type: "integer" },
-          element: { type: "string" },
-          finding: { type: "string" },
-          condition: {
-            type: "string",
-            enum: ["Bom", "Regular", "Ruim", "Não verificado"]
-          },
-          action_class: {
-            type: "string",
-            enum: ["I", "M", "C", "E"]
-          },
-          caption: { type: "string" },
-          recommendation: { type: "string" },
-          confidence: { type: "number" },
-          review_required: { type: "boolean" }
+          index: { type: "INTEGER" },
+          element: { type: "STRING" },
+          finding: { type: "STRING" },
+          condition: { type: "STRING", enum: ["Bom", "Regular", "Ruim", "Não verificado"] },
+          action_class: { type: "STRING", enum: ["I", "M", "C", "E"] },
+          caption: { type: "STRING" },
+          recommendation: { type: "STRING" },
+          confidence: { type: "NUMBER" },
+          review_required: { type: "BOOLEAN" }
         },
         required: [
           "index","element","finding","condition","action_class",
@@ -81,15 +71,10 @@ REGRAS:
 - recommendation deve ser prudente e compatível com inspeção visual.
 `;
 
-function extractOutputText(response) {
-  if (response.output_text) return response.output_text;
-  for (const item of response.output || []) {
-    if (item.type !== "message") continue;
-    for (const part of item.content || []) {
-      if (part.type === "output_text" && part.text) return part.text;
-    }
-  }
-  return null;
+function dataUrlToInlineData(dataUrl) {
+  const match = /^data:(.*?);base64,(.*)$/.exec(dataUrl || "");
+  if (!match) return null;
+  return { inlineData: { mimeType: match[1] || "image/jpeg", data: match[2] } };
 }
 
 export default async function handler(req, res) {
@@ -97,12 +82,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Use POST." });
   }
 
-  const configuredKey = process.env.OPENAI_API_KEY;
-  const suppliedKey = req.headers["x-openai-key"];
+  const configuredKey = process.env.GEMINI_API_KEY;
+  const suppliedKey = req.headers["x-gemini-key"];
   const apiKey = configuredKey || suppliedKey;
   if (!apiKey) {
     return res.status(400).json({
-      error: "Configure OPENAI_API_KEY no Vercel ou informe uma chave no painel do site."
+      error: "Configure GEMINI_API_KEY no Vercel ou informe uma chave Gemini no painel do site."
     });
   }
 
@@ -115,56 +100,81 @@ export default async function handler(req, res) {
   if (!Array.isArray(images) || images.length < 1 || images.length > 4) {
     return res.status(400).json({ error: "Envie de 1 a 4 imagens por grupo." });
   }
+
   if (JSON.stringify(req.body || {}).length > 5_500_000) {
     return res.status(413).json({ error: "Grupo de imagens muito grande. Reduza as fotos ou analise menos por vez." });
   }
 
   const meta = Array.isArray(metadata) ? metadata : [];
-  const userText = `
-As ${images.length} fotografias abaixo pertencem ao mesmo grupo de localização ou sequência próxima.
+  const parts = [
+    { text: systemPrompt },
+    { text: `As ${images.length} fotografias abaixo pertencem ao mesmo grupo de localização ou sequência próxima.
 
 Metadados:
 ${JSON.stringify(meta, null, 2)}
 
-Retorne exatamente um resultado por imagem, preservando index 0..${images.length-1}.
-Use as demais fotos do grupo para contextualizar a análise de cada imagem.
-`;
+Retorne exatamente um resultado por imagem, preservando index 0..${images.length - 1}.
+Use as demais fotos do grupo para contextualizar a análise de cada imagem.` }
+  ];
 
-  const content = [{ type: "input_text", text: userText }];
   images.forEach((imageUrl, i) => {
-    content.push({ type: "input_text", text: `IMAGEM ${i+1} / index ${i}` });
-    content.push({ type: "input_image", image_url: imageUrl, detail: "high" });
+    parts.push({ text: `IMAGEM ${i + 1} / index ${i}` });
+    const inline = dataUrlToInlineData(imageUrl);
+    if (inline) parts.push(inline);
   });
 
   try {
-    const openai = new OpenAI({ apiKey });
-    const response = await openai.responses.create({
-      model: MODEL,
-      input: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content }
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          name: "inspection_group",
-          strict: true,
-          schema
-        }
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema,
+            temperature: 0.2,
+            maxOutputTokens: 3000
+          }
+        })
       }
-    });
+    );
 
-    const text = extractOutputText(response);
-    if (!text) throw new Error("A API não retornou texto estruturado.");
-    const parsed = JSON.parse(text);
+    const data = await response.json();
+
+    if (!response.ok) {
+      const msg = data?.error?.message || "Falha na chamada do Gemini.";
+      return res.status(response.status).json({ error: msg });
+    }
+
+    const text = data?.candidates?.[0]?.content?.parts
+      ?.map(p => p.text || "")
+      .join("")
+      .trim();
+
+    if (!text) {
+      return res.status(500).json({ error: "O Gemini não retornou conteúdo analisável." });
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return res.status(500).json({ error: "O Gemini retornou uma resposta que não pôde ser interpretada." });
+    }
 
     if (!Array.isArray(parsed.results) || parsed.results.length !== images.length) {
-      throw new Error("Quantidade de resultados diferente da quantidade de fotos.");
+      return res.status(500).json({ error: "Quantidade de resultados diferente da quantidade de fotos." });
     }
+
     return res.status(200).json(parsed);
   } catch (err) {
     return res.status(500).json({
-      error: err?.message || "Falha na análise das imagens."
+      error: err?.message || "Falha na análise das imagens com Gemini."
     });
   }
 }
