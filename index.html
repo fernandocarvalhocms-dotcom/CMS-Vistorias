@@ -7,9 +7,9 @@
 <style>
 :root{--o:#ef4b23;--ink:#25282c;--muted:#6d6e71;--line:#d9dbde;--bg:#f4f5f7}
 *{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
-button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:245px 1fr 350px;min-height:100vh}
+button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:265px 1fr 350px;min-height:100vh}
 aside{background:#fff;padding:17px;height:100vh;position:sticky;top:0;overflow:auto}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}
-.appBrand{display:flex;align-items:center;gap:10px}.appBrand img{width:30px;height:78px;object-fit:contain;flex:0 0 30px}.logo{font-size:24px;font-weight:800}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
+.appBrand{display:flex;align-items:flex-start;gap:12px;min-height:124px;overflow:visible}.appBrand img{width:44px;height:116px;object-fit:contain;object-position:center top;display:block;flex:0 0 44px}.appBrand>div{padding-top:8px;min-width:0}.logo{font-size:22px;font-weight:800;line-height:1.05;white-space:nowrap}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
 .btn{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer}.primary{background:var(--o);color:#fff}.dark{background:#30343a;color:#fff}.ghost{background:#f7f8f9;border:1px solid var(--line)}.full{width:100%}
 .field{width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#fff}label{display:block;margin:12px 0 5px;font-size:12px;color:#666;font-weight:bold}textarea.field{min-height:85px;resize:vertical}
 .nav{display:block;width:100%;border:0;background:transparent;text-align:left;padding:8px;border-radius:7px;cursor:pointer}.nav.active{background:#fff0ec;color:#ad381f;font-weight:bold}.sect{margin:16px 0 6px;font-size:11px;text-transform:uppercase;font-weight:bold;color:#777}
@@ -39,22 +39,22 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 .cap{height:30mm;border:1px solid #cfcfcf;border-top:0;padding:2mm 2.2mm;font-size:7.25px;line-height:1.2;overflow:hidden;background:#fff}
 .cap.compact{font-size:6.7px}.cap.tight{font-size:6.15px;line-height:1.13}
 .cap .itemTitle{font-size:7.7px;font-weight:800;margin-bottom:1mm}.cap b{font-weight:700}
-.coverBlock{padding-top:28mm;text-align:center}.coverBlock h1{font-size:22px;line-height:1.2;margin:0 0 5mm}.coverBlock h2{font-size:14px;color:var(--o);margin:0 0 6mm}.coverMeta{font-size:11px;font-weight:700;margin-bottom:10mm}.coverNote{font-size:9px;color:#666;margin:8mm auto 0;max-width:150mm}
-@media(max-width:1050px){.app{grid-template-columns:220px 1fr}.right{position:fixed;right:0;width:350px;z-index:10;box-shadow:-5px 0 20px #0002}}
+.coverBlock{padding-top:22mm;text-align:center}.coverBlock h1{font-size:22px;line-height:1.2;margin:0 0 5mm}.coverBlock h2{font-size:14px;color:var(--o);margin:0 0 6mm}.coverMeta{font-size:11px;font-weight:700;margin-bottom:7mm}.classLegend{margin:7mm auto 0;max-width:156mm;border:1px solid #d7d7d7;border-radius:2mm;padding:4mm 5mm;text-align:left;font-size:8.5px;line-height:1.35;background:#fafafa}.classLegendTitle{font-size:9.5px;font-weight:800;margin-bottom:2mm;color:#222}.classLegendGrid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm 7mm}.classLegendGrid b{color:#222}.classLegendApp{margin:14px 0 2px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fafafa;font-size:11px;line-height:1.4}.classLegendApp b{color:#333}.coverNote{font-size:8.5px;color:#666;margin:5mm auto 0;max-width:150mm}
+@media(max-width:1050px){.app{grid-template-columns:245px 1fr}.right{position:fixed;right:0;width:350px;z-index:10;box-shadow:-5px 0 20px #0002}}
 @media print{html,body{margin:0!important;padding:0!important;background:#fff!important}.app,.modal{display:none!important}.report{display:block!important}.a4{width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;box-shadow:none!important;page-break-after:always!important;break-after:page!important}@page{size:A4 portrait;margin:0}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="left">
-<div class="appBrand"><img src="/assets/cms-logo.svg" alt="CMS"><div><div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div></div></div>
+<div class="appBrand"><img src="/assets/cms-logo.svg?v=20260924-2" alt="Logo CMS"><div><div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div></div></div>
 <div class="actions">
 <button class="btn primary full" onclick="zipInput.click()">Importar ZIP</button><input id="zipInput" type="file" accept=".zip" hidden>
 <button id="analyzeBtn" class="btn dark full" onclick="analyzeAll()">Analisar todas com IA</button>
 <button class="btn ghost full" onclick="generateReport()">Gerar relatório</button>
 <button class="btn ghost full" onclick="exportPdf()">Exportar PDF A4</button>
 </div>
-<label>Chave Gemini</label><input id="apiKey" class="field" type="password" placeholder="Opcional se configurada no Vercel">
+<label>Chave Gemini</label><input id="apiKey" class="field" type="password" placeholder="Opcional se configurada no Vercel"><div class="classLegendApp"><b>Classes:</b><br><b>I</b> = Informativo · <b>M</b> = Manutenção<br><b>C</b> = Correção/reparo · <b>E</b> = Avaliação específica</div>
 <div class="sect">Projeto</div>
 <button class="nav active" onclick="setSector('all',this)">Todas</button><button class="nav" onclick="setSector('G1',this)">Galpão 01</button><button class="nav" onclick="setSector('G2',this)">Galpão 02</button><button class="nav" onclick="setSector('ADM',this)">Administrativo</button><button class="nav" onclick="setSector('EXT',this)">Áreas externas</button>
 <div class="sect">Processamento</div><div id="stats" class="muted">0 fotos</div><div class="progress"><span id="bar"></span></div>
@@ -113,7 +113,7 @@ function reportFooter(page,total){
  return `<div class="reportFooter"><div class="company">Ceemeesse Engenharia Ltda<br>Av. Ipanema, 165 cj.1707 – 18 do Forte – SP<br>www.cmseng.com.br</div><div class="pageNo">${page}/${total}</div></div>`
 }
 function reportHeader(title,subtitle=''){
- return `<div class="reportHeader"><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}<div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.svg" alt="CMS"></div>`
+ return `<div class="reportHeader"><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}<div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.svg?v=20260924-2" alt="CMS"></div>`
 }
 function captionClass(x){
  const n=(x.finding||'').length+(x.caption||'').length+(x.recommendation||'').length;
@@ -128,7 +128,7 @@ function reportHtml(){
    for(let i=0;i<a.length;i+=6) sectorPages.push({sector:s,items:a.slice(i,i+6)});
  }
  const total=1+sectorPages.length;
- pages.push(`<section class="a4">${reportHeader('RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL','Condições aparentes para locação')}<div class="coverBlock"><h1>RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL</h1><h2>Condições aparentes para locação</h2><div class="coverMeta">PRIMEINVEST / MULTILOG · SANTOS/SP<br>02 Galpões e Áreas Externas</div><img src="/assets/cms-logo.svg" alt="CMS" style="height:70mm;width:auto;object-fit:contain"><div class="coverNote">Relatório baseado em inspeção visual e registros fotográficos. As ocorrências permanecem sujeitas à validação do responsável técnico.</div></div>${reportFooter(1,total)}</section>`);
+ pages.push(`<section class="a4">${reportHeader('RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL','Condições aparentes para locação')}<div class="coverBlock"><h1>RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL</h1><h2>Condições aparentes para locação</h2><div class="coverMeta">PRIMEINVEST / MULTILOG · SANTOS/SP<br>02 Galpões e Áreas Externas</div><img src="/assets/cms-logo.svg?v=20260924-2" alt="CMS" style="height:52mm;width:auto;object-fit:contain"><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>Classe I — Informativo:</b> registro/observação sem ação corretiva imediata.</div><div><b>Classe M — Manutenção:</b> demanda manutenção preventiva ou corretiva de rotina.</div><div><b>Classe C — Correção/reparo:</b> demanda intervenção corretiva programada.</div><div><b>Classe E — Avaliação específica:</b> requer verificação técnica complementar/especializada.</div></div></div><div class="coverNote">Relatório baseado em inspeção visual e registros fotográficos. As ocorrências permanecem sujeitas à validação do responsável técnico.</div></div>${reportFooter(1,total)}</section>`);
  let page=2;
  for(const p of sectorPages){
    let cards='';
