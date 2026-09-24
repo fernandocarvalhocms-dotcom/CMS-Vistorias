@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CMS Vistorias</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--o:#ef4b23;--ink:#25282c;--muted:#6d6e71;--line:#d9dbde;--bg:#f4f5f7}
 *{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -23,23 +23,48 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 .card.processing{outline:3px solid #f6b39f;border-color:var(--o)}.processingTag{background:#fff0e9;color:#a63f20}
 .modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:20}.modal.open{display:flex}.modalbox{background:#fff;width:min(980px,95vw);max-height:92vh;overflow:auto;border-radius:12px;padding:18px}
 .report{display:none}
-.a4{width:210mm;height:297mm;background:#fff;margin:0 auto 12px;padding:11mm 13mm 13mm 13mm;page-break-after:always;position:relative;overflow:hidden;font-family:Arial,sans-serif}
-.reportHeader{height:24mm;position:relative;padding-right:15mm;border-bottom:1px solid #ddd;margin-bottom:4mm}
-.reportTitle{font-size:16px;font-weight:800;line-height:1.15;text-align:center;margin-top:2mm}
-.reportSub{font-size:10px;text-align:center;color:#555;margin-top:1.5mm}
-.reportLogo{position:absolute;right:0;top:-2mm;width:11mm;height:auto;max-height:27mm;object-fit:contain}
-.reportOrangeLine{position:absolute;right:12mm;top:-1mm;width:.8mm;height:26mm;background:var(--o)}
-.reportFooter{position:absolute;left:13mm;right:13mm;bottom:5mm;height:8mm;border-top:1px solid #ddd;padding-top:2mm;font-size:7px;color:#777;display:flex;justify-content:space-between;align-items:flex-start}
-.reportFooter .company{text-align:left;line-height:1.2}.reportFooter .pageNo{font-weight:700;color:#555}
-.rgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,82mm);gap:4mm 5mm}
-.rphoto{height:82mm;display:grid;grid-template-rows:52mm 30mm;break-inside:avoid;overflow:hidden}
-.rphoto .pic{height:52mm;border:1px solid #cfcfcf;overflow:hidden;background:#f1f1f1;position:relative}
+.a4{width:210mm;height:297mm;background:#fff;margin:0 auto 12px;padding:10mm 12mm 12mm;position:relative;overflow:hidden;font-family:Arial,sans-serif;color:#25282c}
+.reportHeader{height:19mm;display:flex;align-items:flex-start;border-bottom:1px solid #dedede;margin-bottom:4mm;position:relative;padding-right:16mm}
+.reportHeadText{flex:1;text-align:left;padding-top:1.5mm}
+.reportKicker{font-size:7.5px;color:#777;text-transform:uppercase;letter-spacing:.35px;margin-bottom:1mm}
+.reportTitle{font-size:13.5px;font-weight:800;line-height:1.15;margin:0}
+.reportSub{font-size:8px;color:#666;margin-top:1.2mm}
+.reportLogo{position:absolute;right:0;top:-1mm;width:9mm;height:auto;max-height:18mm;object-fit:contain}
+.reportOrangeLine{position:absolute;right:11mm;top:0;width:.7mm;height:17mm;background:var(--o)}
+.reportFooter{position:absolute;left:12mm;right:12mm;bottom:4mm;height:7mm;border-top:1px solid #ddd;padding-top:1.8mm;font-size:6.6px;color:#777;display:flex;justify-content:space-between;align-items:flex-start}
+.reportFooter .company{text-align:left;line-height:1.15}.reportFooter .pageNo{font-weight:700;color:#555;font-size:7px}
+.coverPage{padding:15mm 16mm 13mm}
+.coverLogo{position:absolute;right:16mm;top:14mm;width:15mm;height:auto;max-height:40mm;object-fit:contain}
+.coverAccent{position:absolute;right:34mm;top:14mm;width:.9mm;height:36mm;background:var(--o)}
+.coverMain{padding-top:56mm;max-width:152mm}
+.coverEyebrow{font-size:9px;font-weight:800;letter-spacing:.7px;color:#777;text-transform:uppercase;margin-bottom:5mm}
+.coverMain h1{font-size:28px;line-height:1.08;margin:0 0 4mm;color:#25282c;max-width:145mm}
+.coverMain h2{font-size:15px;color:var(--o);margin:0 0 12mm;font-weight:700}
+.coverMetaBox{border-left:3px solid var(--o);padding:3mm 0 3mm 5mm;font-size:11px;line-height:1.55}
+.coverMetaBox b{font-size:12px}
+.coverBottom{position:absolute;left:16mm;right:16mm;bottom:26mm;font-size:8.5px;color:#666;line-height:1.45;max-width:155mm}
+.introGrid{display:grid;grid-template-columns:1.15fr .85fr;gap:7mm}
+.sectionBox{border:1px solid #ddd;border-radius:2mm;padding:4mm 4.5mm;margin-bottom:4mm;background:#fff}
+.sectionBox h3{font-size:10.5px;margin:0 0 2mm;color:#222}
+.sectionBox p{font-size:8.2px;line-height:1.42;margin:0;color:#444}
+.classLegend{border:1px solid #ddd;border-radius:2mm;padding:4mm;background:#fafafa}
+.classLegendTitle{font-size:9.5px;font-weight:800;margin-bottom:2.5mm}
+.classLegendGrid{display:grid;grid-template-columns:1fr;gap:2mm;font-size:7.8px;line-height:1.35}
+.indexBox{border:1px solid #ddd;border-radius:2mm;padding:4mm 4.5mm;margin-top:4mm}
+.indexBox h3{font-size:10.5px;margin:0 0 2.5mm}
+.indexRow{display:grid;grid-template-columns:8mm 1fr auto;gap:2mm;padding:2mm 0;border-bottom:1px solid #eee;font-size:8.2px}
+.indexRow:last-child{border-bottom:0}.indexCode{font-weight:800;color:var(--o)}.indexPages{font-weight:700;color:#555}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,76mm);gap:3mm 5mm}
+.rphoto{height:76mm;display:grid;grid-template-rows:48mm 28mm;overflow:hidden;break-inside:avoid}
+.rphoto .pic{height:48mm;border:1px solid #cfcfcf;overflow:hidden;background:#f1f1f1;position:relative}
 .rphoto .pic img{width:100%;height:100%;object-fit:cover;display:block}
-.itemBadge{position:absolute;left:2mm;top:2mm;background:rgba(0,0,0,.72);color:#fff;font-size:7px;font-weight:700;padding:1.2mm 2mm;border-radius:3px}
-.cap{height:30mm;border:1px solid #cfcfcf;border-top:0;padding:2mm 2.2mm;font-size:7.25px;line-height:1.2;overflow:hidden;background:#fff}
-.cap.compact{font-size:6.7px}.cap.tight{font-size:6.15px;line-height:1.13}
-.cap .itemTitle{font-size:7.7px;font-weight:800;margin-bottom:1mm}.cap b{font-weight:700}
-.coverBlock{padding-top:22mm;text-align:center}.coverBlock h1{font-size:22px;line-height:1.2;margin:0 0 5mm}.coverBlock h2{font-size:14px;color:var(--o);margin:0 0 6mm}.coverMeta{font-size:11px;font-weight:700;margin-bottom:7mm}.classLegend{margin:7mm auto 0;max-width:156mm;border:1px solid #d7d7d7;border-radius:2mm;padding:4mm 5mm;text-align:left;font-size:8.5px;line-height:1.35;background:#fafafa}.classLegendTitle{font-size:9.5px;font-weight:800;margin-bottom:2mm;color:#222}.classLegendGrid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm 7mm}.classLegendGrid b{color:#222}.classLegendApp{margin:14px 0 2px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fafafa;font-size:11px;line-height:1.4}.classLegendApp b{color:#333}.coverNote{font-size:8.5px;color:#666;margin:5mm auto 0;max-width:150mm}
+.itemBadge{position:absolute;left:2mm;top:2mm;background:rgba(0,0,0,.72);color:#fff;font-size:6.7px;font-weight:700;padding:1mm 1.8mm;border-radius:3px}
+.cap{height:28mm;border:1px solid #cfcfcf;border-top:0;padding:1.7mm 2mm;font-size:6.15px;line-height:1.17;overflow:hidden;background:#fff}
+.cap .itemTitle{font-size:6.85px;font-weight:800;margin-bottom:.8mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap .finding{font-weight:700;margin-bottom:.7mm}
+.cap .captionText{color:#444}
+.cap .metaLine{margin-top:.7mm}.cap .rec{margin-top:.6mm;color:#333}
+.classLegendApp{margin:14px 0 2px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fafafa;font-size:11px;line-height:1.4}.classLegendApp b{color:#333}
 @media(max-width:1050px){.app{grid-template-columns:245px 1fr}.right{position:fixed;right:0;width:350px;z-index:10;box-shadow:-5px 0 20px #0002}}
 @media print{html,body{margin:0!important;padding:0!important;background:#fff!important}.app,.modal{display:none!important}.report{display:block!important}.a4{width:210mm!important;height:297mm!important;min-height:297mm!important;margin:0!important;box-shadow:none!important;page-break-after:always!important;break-after:page!important}@page{size:A4 portrait;margin:0}}
 </style>
@@ -72,10 +97,10 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 <img id="edImg" class="thumb"><h3 id="edName"></h3><button class="btn dark full" onclick="analyzeSelected()">Reanalisar grupo desta foto</button>
 <label>Contexto do grupo</label><textarea id="edGroup" class="field" readonly></textarea>
 <label>Setor</label><select id="edSector" class="field"><option value="G1">Galpão 01</option><option value="G2">Galpão 02</option><option value="ADM">Administrativo</option><option value="EXT">Áreas externas</option></select>
-<label>Elemento</label><input id="edElement" class="field"><label>Patologia / condição</label><input id="edFinding" class="field">
+<label>Elemento</label><input id="edElement" class="field" maxlength="80"><label>Patologia / condição (máx. 100 caracteres)</label><input id="edFinding" class="field" maxlength="100">
 <label>Condição aparente</label><select id="edCondition" class="field"><option>Bom</option><option>Regular</option><option>Ruim</option><option>Não verificado</option></select>
 <label>Classe</label><select id="edClass" class="field"><option>I</option><option>M</option><option>C</option><option>E</option></select>
-<label>Legenda técnica</label><textarea id="edCaption" class="field"></textarea><label>Recomendação</label><textarea id="edRec" class="field"></textarea>
+<label>Legenda técnica (máx. 180 caracteres)</label><textarea id="edCaption" class="field" maxlength="180"></textarea><label>Recomendação (máx. 150 caracteres)</label><textarea id="edRec" class="field" maxlength="150"></textarea>
 <label><input id="edReview" type="checkbox"> Manter para revisão técnica</label><button class="btn primary full" style="margin-top:12px" onclick="saveEdit()">Salvar alteração</button>
 </div>
 </aside>
@@ -94,52 +119,75 @@ function sname(s){return({G1:'Galpão 01',G2:'Galpão 02',ADM:'Administrativo',E
 function hidden(n){const p=n.split('/'),b=p[p.length-1];return n.startsWith('__MACOSX/')||b.startsWith('._')||b==='.DS_Store'}
 function sector(p){p=p.toUpperCase();if(p.includes('GALPAO_02')||p.includes('G2'))return'G2';if(p.includes('ADMIN'))return'ADM';if(p.includes('EXTERN')||p.includes('PATIO')||p.includes('DREN')||p.includes('PERIM'))return'EXT';return'G1'}
 function elem(p){p=p.toUpperCase();for(const [k,v] of [['PISO','Piso industrial'],['ESTRUT','Estrutura aparente'],['COBERT','Cobertura observável'],['DOCA','Docas / portas / portões'],['ELETR','Instalações elétricas aparentes'],['HIDR','Instalações hidráulicas aparentes'],['INCEND','Sistema de incêndio'],['DREN','Drenagem superficial'],['PAV','Pavimentação externa'],['PERIM','Fechamento / perímetro'],['FACH','Fachadas']])if(p.includes(k))return v;return'Condição geral'}
-function folder(p){const a=p.split('/');a.pop();return a.join('/')}function esc(s){return(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function folder(p){const a=p.split('/');a.pop();return a.join('/')}function esc(s){return(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function clip(s,n){s=(s||'').trim();return s.length>n?s.slice(0,Math.max(0,n-1)).trimEnd()+'…':s}
 function valid(blob){return new Promise(r=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);r(i.naturalWidth>20&&i.naturalHeight>20)};i.onerror=()=>{URL.revokeObjectURL(u);r(false)};i.src=u})}
 function resize(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>{let w=i.naturalWidth,h=i.naturalHeight,s=Math.min(1,1280/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.76))};i.onerror=rej;i.src=u})}
 $('zipInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{setBusy('Lendo arquivo ZIP','Preparando lista de imagens');$('bar').style.width='0%';const z=await JSZip.loadAsync(f);state.items=[];state.selected=null;const all=Object.entries(z.files),candidates=all.filter(([name,en])=>!en.dir&&!hidden(name)&&/\.(jpe?g|png|webp)$/i.test(name));let ignored=all.length-candidates.length,processed=0;updateBusy(`${candidates.length} imagens encontradas`);
 const loaded=await mapLimit(candidates,6,async ([name,en])=>{try{const b=await en.async('blob');if(!(await valid(b))){ignored++;return null}return{id:crypto.randomUUID(),name:name.split('/').pop(),path:name,folder:folder(name),blob:b,url:URL.createObjectURL(b),sector:sector(name),element:elem(name),finding:'Aguardando análise IA',condition:'Não verificado',cls:'I',caption:'Aguardando análise visual.',recommendation:'Aguardando análise visual.',review:true,groupSummary:'',processStatus:'pending'}}finally{processed++;$('bar').style.width=(100*processed/Math.max(1,candidates.length))+'%';$('stats').textContent=`${processed}/${candidates.length} fotos carregadas`;updateBusy(`Carregando fotos ${processed}/${candidates.length}`)}});state.items=loaded.filter(Boolean);state.items.sort((a,b)=>a.path.localeCompare(b.path,undefined,{numeric:true}));state.selected=state.items[0]?.id||null;$('stats').textContent=`${state.items.length} fotos válidas · ${ignored} ignorados`;$('bar').style.width='100%';render();updateEditor();setDone('Fotos carregadas',`${state.items.length} fotos prontas para análise`)}catch(err){setError('Falha ao importar',err.message);alert(err.message)}};
 function groups(){const b={};for(const x of state.items)(b[x.folder+'|'+x.sector]??=[]).push(x);const out=[];for(const a of Object.values(b)){a.sort((x,y)=>x.name.localeCompare(y.name,undefined,{numeric:true}));for(let i=0;i<a.length;i+=4)out.push(a.slice(i,i+4))}return out}
 function groupOf(x){return groups().find(g=>g.some(y=>y.id===x.id))||[x]}
-async function analyzeGroup(g){for(const x of g)x.processStatus='processing';render();const images=[],metadata=[];for(let i=0;i<g.length;i++){images.push(await resize(g[i].blob));metadata.push({index:i,filename:g[i].name,folder:g[i].folder,sector:sname(g[i].sector),element_hint:g[i].element})}const headers={'Content-Type':'application/json'};if($('apiKey').value.trim())headers['x-gemini-key']=$('apiKey').value.trim();const r=await fetch('/api/analyze-group',{method:'POST',headers,body:JSON.stringify({images,metadata})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Erro');for(const rr of j.results){const x=g[rr.index];x.element=rr.element;x.finding=rr.finding;x.condition=rr.condition;x.cls=rr.action_class;x.caption=rr.caption;x.recommendation=rr.recommendation;x.review=rr.review_required||Number(rr.confidence||0)<.7;x.groupSummary=j.group_summary||'';x.processStatus='done'}}
+async function analyzeGroup(g){for(const x of g)x.processStatus='processing';render();const images=[],metadata=[];for(let i=0;i<g.length;i++){images.push(await resize(g[i].blob));metadata.push({index:i,filename:g[i].name,folder:g[i].folder,sector:sname(g[i].sector),element_hint:g[i].element})}const headers={'Content-Type':'application/json'};if($('apiKey').value.trim())headers['x-gemini-key']=$('apiKey').value.trim();const r=await fetch('/api/analyze-group',{method:'POST',headers,body:JSON.stringify({images,metadata})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Erro');for(const rr of j.results){const x=g[rr.index];x.element=clip(rr.element,80);x.finding=clip(rr.finding,100);x.condition=rr.condition;x.cls=rr.action_class;x.caption=clip(rr.caption,180);x.recommendation=clip(rr.recommendation,150);x.review=rr.review_required||Number(rr.confidence||0)<.7;x.groupSummary=j.group_summary||'';x.processStatus='done'}}
 async function analyzeAll(){if(!state.items.length)return alert('Importe o ZIP primeiro.');$('analyzeBtn').disabled=true;$('bar').style.width='0%';const gs=groups();let done=0,doneGroups=0;setBusy('IA analisando fotografias',`0/${state.items.length} fotos · 0/${gs.length} grupos`);try{await mapLimit(gs,2,async g=>{try{await analyzeGroup(g)}catch(e){for(const x of g){x.finding='Falha na análise';x.review=true;x.groupSummary=e.message;x.processStatus='error'}}finally{done+=g.length;doneGroups++;$('bar').style.width=(100*done/state.items.length)+'%';$('stats').textContent=`${done}/${state.items.length} analisadas · ${doneGroups}/${gs.length} grupos`;updateBusy(`${done}/${state.items.length} fotos · ${doneGroups}/${gs.length} grupos`);render()}});setDone('Análise concluída',`${done} fotos analisadas em ${gs.length} grupos`)}catch(e){setError('Erro durante análise',e.message)}finally{$('analyzeBtn').disabled=false;updateEditor()}}
 async function analyzeSelected(){const x=state.items.find(i=>i.id===state.selected);if(!x)return;const g=groupOf(x);setBusy('IA analisando grupo selecionado',`${g.length} foto(s)`);try{await analyzeGroup(g);render();updateEditor();setDone('Grupo analisado',`${g.length} foto(s) atualizadas`)}catch(e){for(const y of g)y.processStatus='error';render();setError('Falha na análise',e.message);alert(e.message)}}
 function list(){let a=state.items;if(state.sector!=='all')a=a.filter(x=>x.sector===state.sector);if(state.condition==='Revisar')a=a.filter(x=>x.review);else if(state.condition!=='all')a=a.filter(x=>x.condition===state.condition);const q=$('search').value.toLowerCase();if(q)a=a.filter(x=>(x.name+' '+x.finding+' '+x.caption+' '+x.element).toLowerCase().includes(q));return a}
 function render(){const g=$('grid');g.innerHTML='';for(const x of list()){const cc=x.condition==='Bom'?'good':x.condition==='Regular'?'regular':x.condition==='Ruim'?'bad':'nv',d=document.createElement('div');d.className='card'+(x.id===state.selected?' selected':'')+(x.processStatus==='processing'?' processing':'');d.onclick=()=>{state.selected=x.id;render();updateEditor()};d.innerHTML=`<div class="photo"><img loading="lazy" decoding="async" src="${x.url}"></div><div class="meta"><div class="title">${esc(x.name)}</div><div class="small">${sname(x.sector)} · ${esc(x.element)}</div><div class="small"><b>${esc(x.finding)}</b></div><div class="tags"><span class="tag ${cc}">${x.condition}</span><span class="tag cls">${x.cls}</span>${x.processStatus==='processing'?'<span class="tag processingTag">Analisando…</span>':''}${x.review?'<span class="tag review">Revisar</span>':''}</div></div>`;g.appendChild(d)}if(!list().length)g.innerHTML='<div class="empty" style="grid-column:1/-1">Importe um ZIP para iniciar.</div>'}
 function updateEditor(){const x=state.items.find(i=>i.id===state.selected);$('empty').style.display=x?'none':'block';$('form').style.display=x?'block':'none';if(!x)return;$('edImg').src=x.url;$('edName').textContent=x.name;$('edGroup').value=x.groupSummary;$('edSector').value=x.sector;$('edElement').value=x.element;$('edFinding').value=x.finding;$('edCondition').value=x.condition;$('edClass').value=x.cls;$('edCaption').value=x.caption;$('edRec').value=x.recommendation;$('edReview').checked=x.review}
-function saveEdit(){const x=state.items.find(i=>i.id===state.selected);x.sector=$('edSector').value;x.element=$('edElement').value;x.finding=$('edFinding').value;x.condition=$('edCondition').value;x.cls=$('edClass').value;x.caption=$('edCaption').value;x.recommendation=$('edRec').value;x.review=$('edReview').checked;render()}
+function saveEdit(){const x=state.items.find(i=>i.id===state.selected);x.sector=$('edSector').value;x.element=clip($('edElement').value,80);x.finding=clip($('edFinding').value,100);x.condition=$('edCondition').value;x.cls=$('edClass').value;x.caption=clip($('edCaption').value,180);x.recommendation=clip($('edRec').value,150);x.review=$('edReview').checked;render()}
 function setSector(v,b){state.sector=v;document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()}function setCondition(v,b){state.condition=v;document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()}
 function reportFooter(page,total){
- return `<div class="reportFooter"><div class="company">Ceemeesse Engenharia Ltda<br>Av. Ipanema, 165 cj.1707 – 18 do Forte – SP<br>www.cmseng.com.br</div><div class="pageNo">${page}/${total}</div></div>`
+ return `<div class="reportFooter"><div class="company">Ceemeesse Engenharia Ltda · Relatório de Inspeção Visual<br>Santos/SP</div><div class="pageNo">${page}/${total}</div></div>`
 }
-function reportHeader(title,subtitle=''){
- return `<div class="reportHeader"><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}<div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.png?v=20260924-3" alt="CMS"></div>`
+function reportHeader(title,subtitle='',kicker='Relatório Técnico de Inspeção Visual'){
+ return `<div class="reportHeader"><div class="reportHeadText"><div class="reportKicker">${esc(kicker)}</div><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}</div><div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.png?v=20260924-3" alt="CMS"></div>`
 }
-function captionClass(x){
- const n=(x.finding||'').length+(x.caption||'').length+(x.recommendation||'').length;
- return n>520?'tight':n>360?'compact':'';
+function sectorCode(s){return({G1:'2.1',G2:'2.2',ADM:'2.3',EXT:'2.4'})[s]||'2'}
+function emissionDate(){return new Intl.DateTimeFormat('pt-BR').format(new Date())}
+function buildReportPlan(){
+ const sectors=['G1','G2','ADM','EXT'];
+ const plan=[];let item=1;
+ for(const s of sectors){
+   const items=state.items.filter(x=>x.sector===s);
+   const pages=[];
+   for(let i=0;i<items.length;i+=6){
+     const group=items.slice(i,i+6).map(x=>({x,itemNo:item++}));
+     pages.push(group);
+   }
+   plan.push({sector:s,items,pages});
+ }
+ return plan;
 }
 function reportHtml(){
- const pages=[];
- let itemNo=1;
- const sectorPages=[];
- for(const s of ['G1','G2','ADM','EXT']){
-   const a=state.items.filter(x=>x.sector===s);
-   for(let i=0;i<a.length;i+=6) sectorPages.push({sector:s,items:a.slice(i,i+6)});
+ const plan=buildReportPlan();
+ const photoPageCount=plan.reduce((n,s)=>n+s.pages.length,0);
+ const total=2+photoPageCount;
+ const pageStarts={};let p=3;
+ for(const sec of plan){
+   pageStarts[sec.sector]=sec.pages.length?{start:p,end:p+sec.pages.length-1}:null;
+   p+=sec.pages.length;
  }
- const total=1+sectorPages.length;
- pages.push(`<section class="a4">${reportHeader('RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL','Condições aparentes para locação')}<div class="coverBlock"><h1>RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL</h1><h2>Condições aparentes para locação</h2><div class="coverMeta">PRIMEINVEST / MULTILOG · SANTOS/SP<br>02 Galpões e Áreas Externas</div><img src="/assets/cms-logo.png?v=20260924-3" alt="CMS" style="height:52mm;width:auto;object-fit:contain"><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>Classe I — Informativo:</b> registro/observação sem ação corretiva imediata.</div><div><b>Classe M — Manutenção:</b> demanda manutenção preventiva ou corretiva de rotina.</div><div><b>Classe C — Correção/reparo:</b> demanda intervenção corretiva programada.</div><div><b>Classe E — Avaliação específica:</b> requer verificação técnica complementar/especializada.</div></div></div><div class="coverNote">Relatório baseado em inspeção visual e registros fotográficos. As ocorrências permanecem sujeitas à validação do responsável técnico.</div></div>${reportFooter(1,total)}</section>`);
- let page=2;
- for(const p of sectorPages){
-   let cards='';
-   for(const x of p.items){
-     const n=String(itemNo).padStart(2,'0');
-     const cls=captionClass(x);
-     cards+=`<div class="rphoto"><div class="pic"><img src="${x.url}"><span class="itemBadge">Item ${n}</span></div><div class="cap ${cls}"><div class="itemTitle">Item ${n} — ${esc(x.finding||'Registro fotográfico')}</div>${esc(x.caption||'')}<br><b>Condição: ${esc(x.condition||'Não verificado')} · Classe ${esc(x.cls||'I')}</b><br><b>Recomendação:</b> ${esc(x.recommendation||'')}</div></div>`;
-     itemNo++;
+ const pages=[];
+ pages.push(`<section class="a4 coverPage"><img class="coverLogo" src="/assets/cms-logo.png?v=20260924-3" alt="CMS"><div class="coverAccent"></div><div class="coverMain"><div class="coverEyebrow">CMS Engenharia · Relatório Técnico</div><h1>Inspeção Visual de Imóvel</h1><h2>Condições aparentes para locação</h2><div class="coverMetaBox"><b>PrimeInvest / Multilog</b><br>Santos/SP<br>02 galpões e áreas externas<br>Data de emissão: ${emissionDate()}</div></div><div class="coverBottom">Registro das condições visualmente aparentes observadas nas fotografias importadas, com classificação técnica para apoio ao processo de locação. O relatório não substitui ensaios, verificações destrutivas ou avaliações especializadas quando necessárias.</div>${reportFooter(1,total)}</section>`);
+
+ const indexRows=plan.map(sec=>{
+   const pg=pageStarts[sec.sector];
+   return `<div class="indexRow"><div class="indexCode">${sectorCode(sec.sector)}</div><div>${esc(sname(sec.sector))}</div><div class="indexPages">${pg?(pg.start===pg.end?'p. '+pg.start:'p. '+pg.start+'–'+pg.end):'sem registros'}</div></div>`;
+ }).join('');
+ pages.push(`<section class="a4">${reportHeader('1. Introdução, escopo e critérios','Objetivo, metodologia, classificação e índice do relatório')}<div class="introGrid"><div><div class="sectionBox"><h3>1.1 Objetivo</h3><p>Registrar, de forma organizada e fotográfica, as condições visualmente aparentes do imóvel para apoio à locação, destacando situações que mereçam manutenção, correção ou avaliação complementar.</p></div><div class="sectionBox"><h3>1.2 Escopo e metodologia</h3><p>A avaliação é visual e baseada nas fotografias importadas. Os registros são analisados em contexto e organizados por área. Não são abrangidos vícios ocultos, ensaios, verificação estrutural aprofundada, estanqueidade, desempenho de sistemas ou conformidade normativa não demonstrável visualmente.</p></div><div class="sectionBox"><h3>1.3 Organização dos registros</h3><p>Os itens são numerados sequencialmente. Cada página contém até seis fotografias, com caixas de texto de mesma dimensão. As descrições do relatório são limitadas para preservar legibilidade e padronização.</p></div></div><div><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>I — Informativo</b><br>Registro/observação sem ação corretiva imediata.</div><div><b>M — Manutenção</b><br>Manutenção preventiva ou corretiva de rotina.</div><div><b>C — Correção/reparo</b><br>Intervenção corretiva programada.</div><div><b>E — Avaliação específica</b><br>Verificação técnica complementar ou especializada.</div></div></div><div class="indexBox"><h3>Índice por área</h3>${indexRows}</div></div></div>${reportFooter(2,total)}</section>`);
+
+ let pageNo=3;
+ for(const sec of plan){
+   if(!sec.pages.length) continue;
+   for(let j=0;j<sec.pages.length;j++){
+     const group=sec.pages[j];
+     let cards='';
+     for(const entry of group){
+       const x=entry.x,n=String(entry.itemNo).padStart(2,'0');
+       cards+=`<div class="rphoto"><div class="pic"><img src="${x.url}"><span class="itemBadge">Item ${n}</span></div><div class="cap"><div class="itemTitle">Item ${n} · ${esc(clip(x.element||'Condição geral',80))}</div><div class="finding">${esc(clip(x.finding||'Registro fotográfico',100))}</div><div class="captionText">${esc(clip(x.caption||'',180))}</div><div class="metaLine"><b>Condição:</b> ${esc(x.condition||'Não verificado')} · <b>Classe:</b> ${esc(x.cls||'I')}</div><div class="rec"><b>Recomendação:</b> ${esc(clip(x.recommendation||'',150))}</div></div></div>`;
+     }
+     const first=group[0]?.itemNo||1,last=group[group.length-1]?.itemNo||first;
+     pages.push(`<section class="a4">${reportHeader(sectorCode(sec.sector)+' · '+sname(sec.sector),'Registro fotográfico · Itens '+String(first).padStart(2,'0')+' a '+String(last).padStart(2,'0'))}<div class="rgrid">${cards}</div>${reportFooter(pageNo,total)}</section>`);
+     pageNo++;
    }
-   pages.push(`<section class="a4">${reportHeader('REGISTRO FOTOGRÁFICO — '+sname(p.sector),'Inspeção visual do imóvel')}<div class="rgrid">${cards}</div>${reportFooter(page,total)}</section>`);
-   page++;
  }
  return pages.join('');
 }
@@ -148,32 +196,33 @@ function waitForReportImages(root){
  return Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})))
 }
 async function generateReport(){
- const h=reportHtml();$('preview').innerHTML=h;$('report').innerHTML=h;await waitForReportImages($('preview'));$('modal').classList.add('open')
+ const h=reportHtml();$('preview').innerHTML=h;await waitForReportImages($('preview'));$('modal').classList.add('open')
 }
 async function exportPdf(){
- const h=reportHtml();const root=$('report');root.innerHTML=h;root.style.display='block';await waitForReportImages(root);
- setBusy('Gerando PDF A4','Montando páginas e incorporando fotografias');
+ const h=reportHtml();
+ setBusy('Gerando PDF A4','Renderizando páginas do relatório');
+ const temp=document.createElement('div');
+ temp.style.position='fixed';temp.style.left='-10000px';temp.style.top='0';temp.style.width='210mm';temp.style.background='#fff';temp.style.zIndex='-1';
+ temp.innerHTML=h;document.body.appendChild(temp);
  try{
-   if(window.html2pdf){
-     const opt={
-       margin:0,
-       filename:'CMS_Relatorio_Inspecao_Visual_Santos.pdf',
-       image:{type:'jpeg',quality:0.92},
-       html2canvas:{scale:1.45,useCORS:true,backgroundColor:'#ffffff',logging:false},
-       jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-       pagebreak:{mode:['css','legacy']}
-     };
-     await html2pdf().set(opt).from(root).save();
-     setDone('PDF gerado','Arquivo CMS_Relatorio_Inspecao_Visual_Santos.pdf baixado');
-   }else{
-     setDone('Relatório pronto','Abrindo impressão para salvar como PDF');
-     setTimeout(()=>window.print(),200);
+   await waitForReportImages(temp);
+   if(!window.html2canvas||!window.jspdf?.jsPDF) throw new Error('Bibliotecas de PDF não carregadas.');
+   const pages=[...temp.querySelectorAll('.a4')];
+   const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait',compress:true});
+   for(let i=0;i<pages.length;i++){
+     updateBusy(`Página ${i+1}/${pages.length}`);
+     const canvas=await window.html2canvas(pages[i],{scale:1.35,useCORS:true,backgroundColor:'#ffffff',logging:false,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
+     const img=canvas.toDataURL('image/jpeg',0.90);
+     if(i>0) pdf.addPage('a4','portrait');
+     pdf.addImage(img,'JPEG',0,0,210,297,undefined,'FAST');
    }
+   pdf.save('CMS_Relatorio_Inspecao_Visual_Santos.pdf');
+   setDone('PDF gerado',`${pages.length} páginas · sem páginas em branco intermediárias`);
  }catch(e){
    setError('Falha ao gerar PDF',e.message);
-   setTimeout(()=>window.print(),200);
+   alert('Falha ao gerar PDF: '+e.message);
  }finally{
-   root.style.display='';
+   temp.remove();
  }
 }
 render();
