@@ -9,7 +9,7 @@
 *{box-sizing:border-box}body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:265px 1fr 350px;min-height:100vh}
 aside{background:#fff;padding:17px;height:100vh;position:sticky;top:0;overflow:auto}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}
-.appBrand{display:flex;align-items:flex-start;gap:12px;min-height:124px;overflow:visible}.appBrand img{width:44px;height:116px;object-fit:contain;object-position:center top;display:block;flex:0 0 44px}.appBrand>div{padding-top:8px;min-width:0}.logo{font-size:22px;font-weight:800;line-height:1.05;white-space:nowrap}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
+.appBrand{display:flex;align-items:flex-start;gap:14px;min-height:148px;overflow:visible}.appBrand img{width:52px;height:auto;max-height:132px;object-fit:contain;object-position:center top;display:block;flex:0 0 52px}.appBrand>div{padding-top:8px;min-width:0}.logo{font-size:22px;font-weight:800;line-height:1.05;white-space:nowrap}.logo b{color:var(--o)}.muted{color:var(--muted);font-size:12px}.actions{display:grid;gap:8px;margin:18px 0}
 .btn{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer}.primary{background:var(--o);color:#fff}.dark{background:#30343a;color:#fff}.ghost{background:#f7f8f9;border:1px solid var(--line)}.full{width:100%}
 .field{width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#fff}label{display:block;margin:12px 0 5px;font-size:12px;color:#666;font-weight:bold}textarea.field{min-height:85px;resize:vertical}
 .nav{display:block;width:100%;border:0;background:transparent;text-align:left;padding:8px;border-radius:7px;cursor:pointer}.nav.active{background:#fff0ec;color:#ad381f;font-weight:bold}.sect{margin:16px 0 6px;font-size:11px;text-transform:uppercase;font-weight:bold;color:#777}
@@ -27,7 +27,7 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 .reportHeader{height:24mm;position:relative;padding-right:15mm;border-bottom:1px solid #ddd;margin-bottom:4mm}
 .reportTitle{font-size:16px;font-weight:800;line-height:1.15;text-align:center;margin-top:2mm}
 .reportSub{font-size:10px;text-align:center;color:#555;margin-top:1.5mm}
-.reportLogo{position:absolute;right:0;top:-3mm;width:10mm;height:27mm;object-fit:contain}
+.reportLogo{position:absolute;right:0;top:-2mm;width:11mm;height:auto;max-height:27mm;object-fit:contain}
 .reportOrangeLine{position:absolute;right:12mm;top:-1mm;width:.8mm;height:26mm;background:var(--o)}
 .reportFooter{position:absolute;left:13mm;right:13mm;bottom:5mm;height:8mm;border-top:1px solid #ddd;padding-top:2mm;font-size:7px;color:#777;display:flex;justify-content:space-between;align-items:flex-start}
 .reportFooter .company{text-align:left;line-height:1.2}.reportFooter .pageNo{font-weight:700;color:#555}
@@ -47,7 +47,7 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 <body>
 <div class="app">
 <aside class="left">
-<div class="appBrand"><img src="/assets/cms-logo.svg?v=20260924-2" alt="Logo CMS"><div><div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div></div></div>
+<div class="appBrand"><img src="/assets/cms-logo.png?v=20260924-3" alt="Logo CMS"><div><div class="logo">CMS <b>Vistorias</b></div><div class="muted">teste web · Santos/SP</div></div></div>
 <div class="actions">
 <button class="btn primary full" onclick="zipInput.click()">Importar ZIP</button><input id="zipInput" type="file" accept=".zip" hidden>
 <button id="analyzeBtn" class="btn dark full" onclick="analyzeAll()">Analisar todas com IA</button>
@@ -113,7 +113,7 @@ function reportFooter(page,total){
  return `<div class="reportFooter"><div class="company">Ceemeesse Engenharia Ltda<br>Av. Ipanema, 165 cj.1707 – 18 do Forte – SP<br>www.cmseng.com.br</div><div class="pageNo">${page}/${total}</div></div>`
 }
 function reportHeader(title,subtitle=''){
- return `<div class="reportHeader"><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}<div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.svg?v=20260924-2" alt="CMS"></div>`
+ return `<div class="reportHeader"><div class="reportTitle">${esc(title)}</div>${subtitle?'<div class="reportSub">'+esc(subtitle)+'</div>':''}<div class="reportOrangeLine"></div><img class="reportLogo" src="/assets/cms-logo.png?v=20260924-3" alt="CMS"></div>`
 }
 function captionClass(x){
  const n=(x.finding||'').length+(x.caption||'').length+(x.recommendation||'').length;
@@ -128,7 +128,7 @@ function reportHtml(){
    for(let i=0;i<a.length;i+=6) sectorPages.push({sector:s,items:a.slice(i,i+6)});
  }
  const total=1+sectorPages.length;
- pages.push(`<section class="a4">${reportHeader('RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL','Condições aparentes para locação')}<div class="coverBlock"><h1>RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL</h1><h2>Condições aparentes para locação</h2><div class="coverMeta">PRIMEINVEST / MULTILOG · SANTOS/SP<br>02 Galpões e Áreas Externas</div><img src="/assets/cms-logo.svg?v=20260924-2" alt="CMS" style="height:52mm;width:auto;object-fit:contain"><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>Classe I — Informativo:</b> registro/observação sem ação corretiva imediata.</div><div><b>Classe M — Manutenção:</b> demanda manutenção preventiva ou corretiva de rotina.</div><div><b>Classe C — Correção/reparo:</b> demanda intervenção corretiva programada.</div><div><b>Classe E — Avaliação específica:</b> requer verificação técnica complementar/especializada.</div></div></div><div class="coverNote">Relatório baseado em inspeção visual e registros fotográficos. As ocorrências permanecem sujeitas à validação do responsável técnico.</div></div>${reportFooter(1,total)}</section>`);
+ pages.push(`<section class="a4">${reportHeader('RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL','Condições aparentes para locação')}<div class="coverBlock"><h1>RELATÓRIO TÉCNICO DE INSPEÇÃO VISUAL DE IMÓVEL</h1><h2>Condições aparentes para locação</h2><div class="coverMeta">PRIMEINVEST / MULTILOG · SANTOS/SP<br>02 Galpões e Áreas Externas</div><img src="/assets/cms-logo.png?v=20260924-3" alt="CMS" style="height:52mm;width:auto;object-fit:contain"><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>Classe I — Informativo:</b> registro/observação sem ação corretiva imediata.</div><div><b>Classe M — Manutenção:</b> demanda manutenção preventiva ou corretiva de rotina.</div><div><b>Classe C — Correção/reparo:</b> demanda intervenção corretiva programada.</div><div><b>Classe E — Avaliação específica:</b> requer verificação técnica complementar/especializada.</div></div></div><div class="coverNote">Relatório baseado em inspeção visual e registros fotográficos. As ocorrências permanecem sujeitas à validação do responsável técnico.</div></div>${reportFooter(1,total)}</section>`);
  let page=2;
  for(const p of sectorPages){
    let cards='';
