@@ -1,23 +1,23 @@
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 
 const responseSchema = {
-  type: "OBJECT",
+  type: "object",
   properties: {
-    group_summary: { type: "STRING" },
+    group_summary: { type: "string" },
     results: {
-      type: "ARRAY",
+      type: "array",
       items: {
-        type: "OBJECT",
+        type: "object",
         properties: {
-          index: { type: "INTEGER" },
-          element: { type: "STRING" },
-          finding: { type: "STRING" },
-          condition: { type: "STRING", enum: ["Bom", "Regular", "Ruim", "Não verificado"] },
-          action_class: { type: "STRING", enum: ["I", "M", "C", "E"] },
-          caption: { type: "STRING" },
-          recommendation: { type: "STRING" },
-          confidence: { type: "NUMBER" },
-          review_required: { type: "BOOLEAN" }
+          index: { type: "integer" },
+          element: { type: "string" },
+          finding: { type: "string" },
+          condition: { type: "string", enum: ["Bom", "Regular", "Ruim", "Não verificado"] },
+          action_class: { type: "string", enum: ["I", "M", "C", "E"] },
+          caption: { type: "string" },
+          recommendation: { type: "string" },
+          confidence: { type: "number" },
+          review_required: { type: "boolean" }
         },
         required: [
           "index","element","finding","condition","action_class",
@@ -135,9 +135,12 @@ Use as demais fotos do grupo para contextualizar a análise de cada imagem.` }
         body: JSON.stringify({
           contents: [{ role: "user", parts }],
           generationConfig: {
-            responseMimeType: "application/json",
-            responseSchema,
-            temperature: 0.2,
+            responseFormat: {
+              text: {
+                mimeType: "application/json",
+                schema: responseSchema
+              }
+            },
             maxOutputTokens: 3000
           }
         })
@@ -148,7 +151,11 @@ Use as demais fotos do grupo para contextualizar a análise de cada imagem.` }
 
     if (!response.ok) {
       const msg = data?.error?.message || "Falha na chamada do Gemini.";
-      return res.status(response.status).json({ error: msg });
+      return res.status(response.status).json({
+        error: msg,
+        code: data?.error?.code || response.status,
+        model: MODEL
+      });
     }
 
     const text = data?.candidates?.[0]?.content?.parts
