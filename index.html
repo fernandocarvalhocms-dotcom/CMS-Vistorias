@@ -43,20 +43,31 @@ main{min-width:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--
 .coverMetaBox{border-left:3px solid var(--o);padding:3mm 0 3mm 5mm;font-size:11px;line-height:1.55}
 .coverMetaBox b{font-size:12px}
 .coverBottom{position:absolute;left:16mm;right:16mm;bottom:26mm;font-size:8.5px;color:#666;line-height:1.45;max-width:155mm}
-.introGrid{display:grid;grid-template-columns:1.15fr .85fr;gap:7mm}
-.sectionBox{border:1px solid #ddd;border-radius:2mm;padding:4mm 4.5mm;margin-bottom:4mm;background:#fff}
-.sectionBox h3{font-size:10.5px;margin:0 0 2mm;color:#222}
-.sectionBox p{font-size:8.2px;line-height:1.42;margin:0;color:#444}
+.introSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin-bottom:5mm}
+.summaryCard{border:1px solid #ddd;border-radius:2mm;padding:3.2mm 3.5mm;background:#fafafa}
+.summaryValue{font-size:17px;font-weight:800;line-height:1;color:#25282c}
+.summaryLabel{font-size:7.4px;color:#777;margin-top:1.2mm;text-transform:uppercase;letter-spacing:.25px}
+.introGrid{display:grid;grid-template-columns:1.08fr .92fr;gap:6mm;align-items:start}
+.sectionBox{border:1px solid #ddd;border-radius:2mm;padding:4mm 4.5mm;margin-bottom:3.2mm;background:#fff}
+.sectionBox h3{font-size:10.2px;margin:0 0 1.8mm;color:#222}
+.sectionBox p{font-size:8px;line-height:1.4;margin:0;color:#444;text-align:justify}
 .classLegend{border:1px solid #ddd;border-radius:2mm;padding:4mm;background:#fafafa}
 .classLegendTitle{font-size:9.5px;font-weight:800;margin-bottom:2.5mm}
-.classLegendGrid{display:grid;grid-template-columns:1fr;gap:2mm;font-size:7.8px;line-height:1.35}
-.indexBox{border:1px solid #ddd;border-radius:2mm;padding:4mm 4.5mm;margin-top:4mm}
-.indexBox h3{font-size:10.5px;margin:0 0 2.5mm}
-.indexRow{display:grid;grid-template-columns:8mm 1fr auto;gap:2mm;padding:2mm 0;border-bottom:1px solid #eee;font-size:8.2px}
-.indexRow:last-child{border-bottom:0}.indexCode{font-weight:800;color:var(--o)}.indexPages{font-weight:700;color:#555}
-.rgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,76mm);gap:3mm 5mm}
-.rphoto{height:76mm;display:grid;grid-template-rows:48mm 28mm;overflow:hidden;break-inside:avoid}
-.rphoto .pic{height:48mm;border:1px solid #cfcfcf;overflow:hidden;background:#f1f1f1;position:relative}
+.classLegendGrid{display:grid;grid-template-columns:1fr;gap:1.8mm;font-size:7.7px;line-height:1.32}
+.indexBox{border:1px solid #ddd;border-radius:2mm;padding:0;margin-top:3.2mm;overflow:hidden;background:#fff}
+.indexBox h3{font-size:10.2px;margin:0;padding:3.5mm 4mm 2.8mm}
+.indexTable{width:100%;border-collapse:collapse;table-layout:fixed;font-size:7.9px}
+.indexTable th{background:#f6f6f6;color:#666;font-size:7.1px;text-transform:uppercase;letter-spacing:.2px;text-align:left;padding:2mm 2.3mm;border-top:1px solid #e5e5e5;border-bottom:1px solid #ddd}
+.indexTable td{padding:2.2mm 2.3mm;border-bottom:1px solid #eee;vertical-align:middle}
+.indexTable tr:last-child td{border-bottom:0}
+.indexTable .cSection{width:14mm;font-weight:800;color:var(--o)}
+.indexTable .cArea{width:auto;font-weight:700;color:#333}
+.indexTable .cItems{width:20mm;text-align:center;font-variant-numeric:tabular-nums}
+.indexTable .cPages{width:25mm;text-align:right;font-weight:700;color:#555;font-variant-numeric:tabular-nums}
+.indexNote{font-size:7.2px;color:#777;padding:2.5mm 4mm 3mm;border-top:1px solid #eee}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,76mm);gap:3mm 5mm;align-items:stretch}
+.rphoto{height:76mm;display:grid;grid-template-rows:48mm 28mm;overflow:hidden;break-inside:avoid;background:#fff}
+.rphoto .pic{height:48mm;border:1px solid #c8c8c8;overflow:hidden;background:#f1f1f1;position:relative}
 .rphoto .pic img{width:100%;height:100%;object-fit:cover;display:block}
 .itemBadge{position:absolute;left:2mm;top:2mm;background:rgba(0,0,0,.72);color:#fff;font-size:6.7px;font-weight:700;padding:1mm 1.8mm;border-radius:3px}
 .cap{height:28mm;border:1px solid #cfcfcf;border-top:0;padding:1.7mm 2mm;font-size:6.15px;line-height:1.17;overflow:hidden;background:#fff}
@@ -168,11 +179,13 @@ function reportHtml(){
  const pages=[];
  pages.push(`<section class="a4 coverPage"><img class="coverLogo" src="/assets/cms-logo.png?v=20260924-3" alt="CMS"><div class="coverAccent"></div><div class="coverMain"><div class="coverEyebrow">CMS Engenharia · Relatório Técnico</div><h1>Inspeção Visual de Imóvel</h1><h2>Condições aparentes para locação</h2><div class="coverMetaBox"><b>PrimeInvest / Multilog</b><br>Santos/SP<br>02 galpões e áreas externas<br>Data de emissão: ${emissionDate()}</div></div><div class="coverBottom">Registro das condições visualmente aparentes observadas nas fotografias importadas, com classificação técnica para apoio ao processo de locação. O relatório não substitui ensaios, verificações destrutivas ou avaliações especializadas quando necessárias.</div>${reportFooter(1,total)}</section>`);
 
+ const totalItems=plan.reduce((n,sec)=>n+sec.items.length,0);
+ const areasWithItems=plan.filter(sec=>sec.items.length).length;
  const indexRows=plan.map(sec=>{
    const pg=pageStarts[sec.sector];
-   return `<div class="indexRow"><div class="indexCode">${sectorCode(sec.sector)}</div><div>${esc(sname(sec.sector))}</div><div class="indexPages">${pg?(pg.start===pg.end?'p. '+pg.start:'p. '+pg.start+'–'+pg.end):'sem registros'}</div></div>`;
+   return `<tr><td class="cSection">${sectorCode(sec.sector)}</td><td class="cArea">${esc(sname(sec.sector))}</td><td class="cItems">${sec.items.length}</td><td class="cPages">${pg?(pg.start===pg.end?pg.start:pg.start+'–'+pg.end):'—'}</td></tr>`;
  }).join('');
- pages.push(`<section class="a4">${reportHeader('1. Introdução, escopo e critérios','Objetivo, metodologia, classificação e índice do relatório')}<div class="introGrid"><div><div class="sectionBox"><h3>1.1 Objetivo</h3><p>Registrar, de forma organizada e fotográfica, as condições visualmente aparentes do imóvel para apoio à locação, destacando situações que mereçam manutenção, correção ou avaliação complementar.</p></div><div class="sectionBox"><h3>1.2 Escopo e metodologia</h3><p>A avaliação é visual e baseada nas fotografias importadas. Os registros são analisados em contexto e organizados por área. Não são abrangidos vícios ocultos, ensaios, verificação estrutural aprofundada, estanqueidade, desempenho de sistemas ou conformidade normativa não demonstrável visualmente.</p></div><div class="sectionBox"><h3>1.3 Organização dos registros</h3><p>Os itens são numerados sequencialmente. Cada página contém até seis fotografias, com caixas de texto de mesma dimensão. As descrições do relatório são limitadas para preservar legibilidade e padronização.</p></div></div><div><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>I — Informativo</b><br>Registro/observação sem ação corretiva imediata.</div><div><b>M — Manutenção</b><br>Manutenção preventiva ou corretiva de rotina.</div><div><b>C — Correção/reparo</b><br>Intervenção corretiva programada.</div><div><b>E — Avaliação específica</b><br>Verificação técnica complementar ou especializada.</div></div></div><div class="indexBox"><h3>Índice por área</h3>${indexRows}</div></div></div>${reportFooter(2,total)}</section>`);
+ pages.push(`<section class="a4">${reportHeader('1. Introdução, escopo e critérios','Objetivo, metodologia, classificação e índice do relatório')}<div class="introSummary"><div class="summaryCard"><div class="summaryValue">${totalItems}</div><div class="summaryLabel">Registros fotográficos</div></div><div class="summaryCard"><div class="summaryValue">${areasWithItems}</div><div class="summaryLabel">Áreas com registros</div></div><div class="summaryCard"><div class="summaryValue">${total}</div><div class="summaryLabel">Páginas do relatório</div></div></div><div class="introGrid"><div><div class="sectionBox"><h3>1.1 Objetivo</h3><p>Registrar, de forma organizada e fotográfica, as condições visualmente aparentes do imóvel para apoio à locação, destacando situações que mereçam manutenção, correção ou avaliação complementar.</p></div><div class="sectionBox"><h3>1.2 Escopo e metodologia</h3><p>A avaliação é visual e baseada nas fotografias importadas. Os registros são analisados em contexto e organizados por área. Não são abrangidos vícios ocultos, ensaios, verificação estrutural aprofundada, estanqueidade, desempenho de sistemas ou conformidade normativa não demonstrável visualmente.</p></div><div class="sectionBox"><h3>1.3 Organização dos registros</h3><p>Os itens são numerados sequencialmente. Cada página contém até seis fotografias, com caixas de texto de mesma dimensão. As descrições do relatório são limitadas para preservar legibilidade e padronização.</p></div></div><div><div class="classLegend"><div class="classLegendTitle">Legenda das classes</div><div class="classLegendGrid"><div><b>I — Informativo</b><br>Registro/observação sem ação corretiva imediata.</div><div><b>M — Manutenção</b><br>Manutenção preventiva ou corretiva de rotina.</div><div><b>C — Correção/reparo</b><br>Intervenção corretiva programada.</div><div><b>E — Avaliação específica</b><br>Verificação técnica complementar ou especializada.</div></div></div><div class="indexBox"><h3>Índice por área</h3><table class="indexTable"><thead><tr><th>Seção</th><th>Área</th><th style="text-align:center">Itens</th><th style="text-align:right">Páginas</th></tr></thead><tbody>${indexRows}</tbody></table><div class="indexNote">A paginação é calculada automaticamente conforme a quantidade de registros por área.</div></div></div></div>${reportFooter(2,total)}</section>`);
 
  let pageNo=3;
  for(const sec of plan){
@@ -211,10 +224,10 @@ async function exportPdf(){
    const pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait',compress:true});
    for(let i=0;i<pages.length;i++){
      updateBusy(`Página ${i+1}/${pages.length}`);
-     const canvas=await window.html2canvas(pages[i],{scale:1.35,useCORS:true,backgroundColor:'#ffffff',logging:false,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
-     const img=canvas.toDataURL('image/jpeg',0.90);
+     const canvas=await window.html2canvas(pages[i],{scale:2.4,useCORS:true,allowTaint:false,imageTimeout:0,backgroundColor:'#ffffff',logging:false,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
+     const img=canvas.toDataURL('image/jpeg',0.97);
      if(i>0) pdf.addPage('a4','portrait');
-     pdf.addImage(img,'JPEG',0,0,210,297,undefined,'FAST');
+     pdf.addImage(img,'JPEG',0,0,210,297,undefined,'MEDIUM');
    }
    pdf.save('CMS_Relatorio_Inspecao_Visual_Santos.pdf');
    setDone('PDF gerado',`${pages.length} páginas · sem páginas em branco intermediárias`);
