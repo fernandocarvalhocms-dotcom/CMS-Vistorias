@@ -124,61 +124,94 @@ Use as demais fotos do grupo para contextualizar a análise de cada imagem.` }
   });
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey
-        },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts }],
-          generationConfig: {
-            responseFormat: {
-              text: {
-                mimeType: "application/json",
-                schema: responseSchema
-              }
+    const requestedModel = process.env.GEMINI_MODEL || MODEL;
+    const models = [...new Set([
+      requestedModel,
+      "gemini-3.1-flash-lite",
+      "gemini-3.5-flash-lite",
+      "gemini-3.8-flash"
+    ])];
+
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    let lastError = null;
+
+    for (const model of models) {
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey
             },
-            maxOutputTokens: 3000
+            body: JSON.stringify({
+              contents: [{ role: "user", parts }],
+              generationConfig: {
+                responseFormat: {
+                  text: {
+                    mimeType: "APPLICATION_JSON",
+                    schema: responseSchema
+                  }
+                },
+                maxOutputTokens: 3000
+              }
+            })
           }
-        })
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const text = data?.candidates?.[0]?.content?.parts
+            ?.map(p => p.text || "")
+            .join("")
+            .trim();
+
+          if (!text) {
+            lastError = { status: 500, message: "O Gemini não retornou conteúdo analisável.", model };
+            break;
+          }
+
+          let parsed;
+          try {
+            parsed = JSON.parse(text);
+          } catch {
+            lastError = { status: 500, message: "O Gemini retornou uma resposta que não pôde ser interpretada.", model };
+            break;
+          }
+
+          if (!Array.isArray(parsed.results) || parsed.results.length !== images.length) {
+            lastError = { status: 500, message: "Quantidade de resultados diferente da quantidade de fotos.", model };
+            break;
+          }
+
+          parsed._model = model;
+          return res.status(200).json(parsed);
+        }
+
+        const msg = data?.error?.message || "Falha na chamada do Gemini.";
+        const retryable = response.status === 429 || response.status === 500 || response.status === 503 ||
+          /high demand|temporar|resource exhausted|unavailable|overload/i.test(msg);
+
+        lastError = {
+          status: response.status,
+          message: msg,
+          code: data?.error?.code || response.status,
+          model
+        };
+
+        if (!retryable) break;
+        if (attempt < 2) await sleep(attempt === 1 ? 900 : 1800);
       }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      const msg = data?.error?.message || "Falha na chamada do Gemini.";
-      return res.status(response.status).json({
-        error: msg,
-        code: data?.error?.code || response.status,
-        model: MODEL
-      });
     }
 
-    const text = data?.candidates?.[0]?.content?.parts
-      ?.map(p => p.text || "")
-      .join("")
-      .trim();
-
-    if (!text) {
-      return res.status(500).json({ error: "O Gemini não retornou conteúdo analisável." });
-    }
-
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
-    } catch {
-      return res.status(500).json({ error: "O Gemini retornou uma resposta que não pôde ser interpretada." });
-    }
-
-    if (!Array.isArray(parsed.results) || parsed.results.length !== images.length) {
-      return res.status(500).json({ error: "Quantidade de resultados diferente da quantidade de fotos." });
-    }
-
-    return res.status(200).json(parsed);
+    return res.status(lastError?.status || 503).json({
+      error: lastError?.message || "Nenhum modelo Gemini disponível no momento.",
+      code: lastError?.code || 503,
+      model: lastError?.model || requestedModel,
+      fallback_attempted: true
+    });
   } catch (err) {
     return res.status(500).json({
       error: err?.message || "Falha na análise das imagens com Gemini."
